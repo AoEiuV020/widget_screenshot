@@ -1,6 +1,4 @@
 import 'dart:io';
-import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
@@ -86,7 +84,6 @@ class _ExampleListExtraPageState extends State<ExampleListExtraPage> with Single
               },
               child: const Text(
                 "Shot",
-                style: TextStyle(color: Colors.white),
               ))
         ],
       ),

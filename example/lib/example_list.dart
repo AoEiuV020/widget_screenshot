@@ -56,7 +56,6 @@ class _ExampleListPageState extends State<ExampleListPage> {
               },
               child: const Text(
                 "Shot",
-                style: TextStyle(color: Colors.white),
               ))
         ],
       ),

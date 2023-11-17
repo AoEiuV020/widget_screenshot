@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -82,7 +81,6 @@ class _ExampleScrollViewExtraPageState extends State<ExampleScrollViewExtraPage>
               },
               child: const Text(
                 "Shot",
-                style: TextStyle(color: Colors.white),
               ))
         ],
       ),
