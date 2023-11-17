@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:typed_data';
-import 'dart:ui';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
 
-import 'image_merger.dart';
 import 'merge_param.dart';
 
 enum ShotFormat { png, jpeg }
@@ -171,9 +170,6 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
   }
 
   Future<Uint8List?> _merge(bool canScroll, MergeParam mergeParam) async {
-    if (canScroll) {
-      return ImageMerger.merge(mergeParam);
-    } else {
       Paint paint = Paint();
       paint
         ..isAntiAlias = false // 是否抗锯齿
@@ -196,7 +192,6 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
       ui.Image rImage = await picture.toImage(mergeParam.size.width.ceil(), mergeParam.size.height.ceil());
       ByteData? byteData = await rImage.toByteData(format: ui.ImageByteFormat.png);
       return byteData!.buffer.asUint8List();
-    }
   }
 
   bool _canScroll(ScrollController? scrollController) {
