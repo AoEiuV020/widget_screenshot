@@ -182,7 +182,7 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
   Future<void> scrollTo(
       ScrollController scrollController, double offset) async {
     scrollController.jumpTo(offset);
-    await Future.delayed(const Duration(milliseconds: 16));
+    await Future.delayed(const Duration(milliseconds: 35));
   }
 
   Future<Uint8List?> _merge(bool canScroll, MergeParam mergeParam) async {
