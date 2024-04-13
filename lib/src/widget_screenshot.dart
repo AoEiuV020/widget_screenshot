@@ -71,8 +71,7 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
         (scrollController.position.maxScrollExtent) > 0;
 
     if (canScroll) {
-      scrollController.jumpTo(0);
-      await Future.delayed(const Duration(milliseconds: 200));
+      await scrollTo(scrollController, 0);
     }
 
     var firstImage = await _screenshot(pixelRatio);
@@ -106,8 +105,7 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
           double scrollHeight = scrollController.offset + sHeight / 10;
 
           if (scrollHeight > sHeight * i) {
-            scrollController.jumpTo(sHeight * i);
-            await Future.delayed(const Duration(milliseconds: 16));
+            await scrollTo(scrollController, sHeight * i);
             i++;
 
             Uint8List image = await _screenshot(pixelRatio);
@@ -123,8 +121,8 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
                 sHeight -
                 sHeight * i;
 
-            scrollController.jumpTo(scrollController.position.maxScrollExtent);
-            await Future.delayed(const Duration(milliseconds: 16));
+            await scrollTo(
+                scrollController, scrollController.position.maxScrollExtent);
 
             Uint8List lastImage = await _screenshot(pixelRatio);
 
@@ -137,8 +135,7 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
 
             imageHeight += lastImageHeight * pixelRatio;
           } else {
-            scrollController.jumpTo(scrollHeight);
-            await Future.delayed(const Duration(milliseconds: 16));
+            await scrollTo(scrollController, scrollHeight);
           }
         } else {
           break;
@@ -180,6 +177,12 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
     resultImage = await _merge(canScroll, mergeParam);
 
     return resultImage;
+  }
+
+  Future<void> scrollTo(
+      ScrollController scrollController, double offset) async {
+    scrollController.jumpTo(offset);
+    await Future.delayed(const Duration(milliseconds: 16));
   }
 
   Future<Uint8List?> _merge(bool canScroll, MergeParam mergeParam) async {
