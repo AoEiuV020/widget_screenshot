@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/rendering.dart';
+import 'package:image/image.dart' as image;
 
 import 'merge_param.dart';
 
@@ -186,30 +187,21 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
   }
 
   Future<Uint8List?> _merge(bool canScroll, MergeParam mergeParam) async {
-    Paint paint = Paint();
-    paint
-      ..isAntiAlias = false // 是否抗锯齿
-      ..color = Colors.white; // 画笔颜色
-    PictureRecorder pictureRecorder = PictureRecorder();
-    Canvas canvas = Canvas(pictureRecorder);
-    if (mergeParam.color != null) {
-      canvas.drawColor(mergeParam.color!, BlendMode.color);
-      canvas.save();
+    var width = mergeParam.size.width.toInt();
+    var resultImage =
+        image.Image(width: width, height: mergeParam.size.height.toInt());
+    for (var param in mergeParam.imageParams) {
+      var currentImage = image.decodePng(param.image)!;
+      var currentHeight = currentImage.height;
+      var offsetY = param.offset.dy.toInt();
+      for (var y = 0; y < currentHeight; y++) {
+        var realY = offsetY + y;
+        for (var i = 0; i < width; i++) {
+          resultImage.setPixel(i, realY, currentImage.getPixel(i, y));
+        }
+      }
     }
-
-    for (var element in mergeParam.imageParams) {
-      ui.Image img = await decodeImageFromList(element.image);
-
-      canvas.drawImage(img, element.offset, paint);
-    }
-
-    Picture picture = pictureRecorder.endRecording();
-
-    ui.Image rImage = await picture.toImage(
-        mergeParam.size.width.ceil(), mergeParam.size.height.ceil());
-    ByteData? byteData =
-        await rImage.toByteData(format: ui.ImageByteFormat.png);
-    return byteData!.buffer.asUint8List();
+    return image.encodePng(resultImage, level: 0);
   }
 
   bool _canScroll(ScrollController? scrollController) {
