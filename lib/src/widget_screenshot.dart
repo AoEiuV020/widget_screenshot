@@ -33,7 +33,7 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
   Future<Uint8List?> screenshot({
     ScrollController? scrollController,
     List<ImageParam> extraImage = const [],
-    int maxHeight = 10000,
+    int? maxHeight,
     double? pixelRatio,
     Color? backgroundColor,
     ShotFormat format = ShotFormat.png,
@@ -97,7 +97,7 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
       int i = 1;
 
       while (true) {
-        if (imageHeight >= maxHeight * pixelRatio) {
+        if (maxHeight != null && imageHeight >= maxHeight * pixelRatio) {
           break;
         }
         double lastImageHeight = 0;
