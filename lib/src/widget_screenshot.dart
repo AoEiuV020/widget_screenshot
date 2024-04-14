@@ -86,11 +86,13 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
     imageHeight += sHeight * pixelRatio;
 
     if (canScroll) {
+      logger() {
+        debugPrint(
+            "WidgetShot scrollController.offser = ${scrollController.offset} , scrollController.position.maxScrollExtent = ${scrollController.position.maxScrollExtent}");
+      }
+
       assert(() {
-        scrollController.addListener(() {
-          debugPrint(
-              "WidgetShot scrollController.offser = ${scrollController.offset} , scrollController.position.maxScrollExtent = ${scrollController.position.maxScrollExtent}");
-        });
+        scrollController.addListener(logger);
         return true;
       }());
 
@@ -142,6 +144,10 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
           break;
         }
       }
+      assert(() {
+        scrollController.removeListener(logger);
+        return true;
+      }());
     }
 
     extraImage
