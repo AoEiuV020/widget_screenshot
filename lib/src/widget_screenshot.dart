@@ -189,19 +189,45 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
   Future<Uint8List?> _merge(bool canScroll, MergeParam mergeParam) async {
     var width = mergeParam.size.width.toInt();
     var resultImage =
-        image.Image(width: width, height: mergeParam.size.height.toInt());
+        image.Image(width: width, height: mergeParam.size.height.toInt(), numChannels: 4);
+    image.Color? backgroundColor = null;
+    if (mergeParam.color != null) {
+      var c = mergeParam.color!;
+      backgroundColor = image.ColorRgba8(c.red, c.green, c.blue, c.alpha);
+    }
     for (var param in mergeParam.imageParams) {
       var currentImage = image.decodePng(param.image)!;
-      var currentHeight = currentImage.height;
+      var currentHeight = param.size.height;
       var offsetY = param.offset.dy.toInt();
       for (var y = 0; y < currentHeight; y++) {
         var realY = offsetY + y;
         for (var i = 0; i < width; i++) {
-          resultImage.setPixel(i, realY, currentImage.getPixel(i, y));
+          resultImage.setPixel(i, realY, blendColors(backgroundColor, currentImage.getPixel(i, y)));
         }
       }
     }
     return image.encodePng(resultImage, level: 0);
+  }
+
+  image.Color blendColors(
+      image.Color? backgroundColor, image.Color foregroundColor) {
+    if (backgroundColor == null) {
+      return foregroundColor;
+    }
+    double alpha = foregroundColor.a / 255.0;
+    double oneMinusAlpha = 1.0 - alpha;
+
+    int resultRed =
+        ((oneMinusAlpha * backgroundColor.r) + (alpha * foregroundColor.r))
+            .round();
+    int resultGreen =
+        ((oneMinusAlpha * backgroundColor.g) + (alpha * foregroundColor.g))
+            .round();
+    int resultBlue =
+        ((oneMinusAlpha * backgroundColor.b) + (alpha * foregroundColor.b))
+            .round();
+
+    return image.ColorRgba8(resultRed, resultGreen, resultBlue, 255);
   }
 
   bool _canScroll(ScrollController? scrollController) {
