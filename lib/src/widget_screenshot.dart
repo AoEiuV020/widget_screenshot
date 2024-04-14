@@ -188,8 +188,8 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
 
   Future<Uint8List?> _merge(bool canScroll, MergeParam mergeParam) async {
     var width = mergeParam.size.width.toInt();
-    var resultImage =
-        image.Image(width: width, height: mergeParam.size.height.toInt(), numChannels: 4);
+    var resultImage = image.Image(
+        width: width, height: mergeParam.size.height.toInt(), numChannels: 4);
     image.Color? backgroundColor = null;
     if (mergeParam.color != null) {
       var c = mergeParam.color!;
@@ -202,7 +202,8 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
       for (var y = 0; y < currentHeight; y++) {
         var realY = offsetY + y;
         for (var i = 0; i < width; i++) {
-          resultImage.setPixel(i, realY, blendColors(backgroundColor, currentImage.getPixel(i, y)));
+          resultImage.setPixel(i, realY,
+              blendColors(backgroundColor, currentImage.getPixel(i, y)));
         }
       }
     }
