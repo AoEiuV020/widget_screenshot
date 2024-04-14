@@ -207,7 +207,13 @@ class WidgetShotRenderRepaintBoundary extends RenderRepaintBoundary {
         }
       }
     }
-    return image.encodePng(resultImage, level: 0);
+    int level;
+    if (mergeParam.quality == 100) {
+      level = 0;
+    } else {
+      level = mergeParam.quality ~/ 10;
+    }
+    return image.encodePng(resultImage, level: level);
   }
 
   image.Color blendColors(
