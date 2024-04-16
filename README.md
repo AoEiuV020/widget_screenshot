@@ -1,3 +1,6 @@
+# 破坏性改动太多，干脆单开一个项目，后续完善一下发布
+[listview_screenshot](https://github.com/AoEiuV020/listview_screenshot)
+
 # widget_screenshot
 
 Widget截屏，支持长截图，如：ListView  
